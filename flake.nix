@@ -10,19 +10,33 @@
     flake-utils.lib.eachDefaultSystem (system:
       let 
         pkgs = nixpkgs.legacyPackages.${system};
+
+        gems = pkgs.bundlerEnv {
+          name = "gems";
+          ruby = pkgs.ruby;
+          gemfile = ./Gemfile;
+          lockfile = ./Gemfile.lock;
+          gemset = ./gemset.nix;
+        };
       in with pkgs;
       {
         devShells.default =
           mkShell {
-            buildInputs = [ ruby ];
+            buildInputs = [ gems bundix ];
           };
 
         packages.default =
           stdenv.mkDerivation {
             name = "Cooking";
-            src = ./.;
-            buildInputs = [ ruby ];
-            buildPhase = "echo start && echo `ls` && bundle exec jekyll build";
+            src = self;
+            buildInputs = [ gems ];
+            buildPhase = ''
+              ${gems}/bin/jekyll build
+            '';
+            installPhase = ''
+              mkdir -p $out
+              cp -r _site $out/_site
+            '';
           };
       }
     );
