@@ -1,0 +1,9 @@
+# Jekyll and Ruby stuff
+_site
+.sass-cache
+.jekyll-cache
+.jekyll-metadata
+vendor
+
+# Bundix stuff
+result
