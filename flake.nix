@@ -35,7 +35,7 @@
             '';
             installPhase = ''
               mkdir -p $out
-              cp -r _site $out/_site
+              cp -r _site $out
             '';
           };
       }
